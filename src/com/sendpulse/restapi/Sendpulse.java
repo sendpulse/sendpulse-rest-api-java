@@ -20,7 +20,7 @@ import org.json.JSONObject;
 
 import de.ailis.pherialize.Pherialize;
 public class Sendpulse implements SendpulseInterface{
-	 private String apiUrl = "http://api.sendpulse.com";
+	 private String apiUrl = "https://api.sendpulse.com";
      private String userId = null;
      private String secret = null;
      private String tokenName = null;
@@ -123,7 +123,7 @@ public class Sendpulse implements SendpulseInterface{
     		 path = path+"?"+postData.toString();
     	 }
     	 URL obj = new URL(this.apiUrl+ "/" + path);
-    	 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+    	 HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
     	 if(useToken && this.tokenName!=null ) {
 			con.setRequestProperty("Authorization", "Bearer " +this.tokenName);
 		 }
