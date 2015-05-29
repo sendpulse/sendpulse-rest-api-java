@@ -65,7 +65,7 @@ public interface SendpulseInterface {
      * Add new emails to book
      *
      * @param int bookId
-     * @param int emails
+     * @param String emails
      * @return Map<String, Object>
      */
     public Map<String, Object> addEmails( int bookId , String emails);
@@ -74,7 +74,7 @@ public interface SendpulseInterface {
      * Remove emails from book
      *
      * @param int bookId
-     * @param int emails
+     * @param String emails
      * @return Map<String, Object>
      */
     public Map<String, Object> removeEmails( int bookId , String emails);
@@ -83,10 +83,10 @@ public interface SendpulseInterface {
      * Get information about email from book
      *
      * @param int bookId
-     * @param int email
+     * @param String email
      * @return Map<String, Object>
      */
-    public Map<String, Object> getEmailInfo( int bookId,String email );
+    public Map<String, Object> getEmailInfo( int bookId, String email );
 
     /**
      * Calculate cost of the campaign based on address book
@@ -136,7 +136,7 @@ public interface SendpulseInterface {
      * @param String senderEmail
      * @param String subject
      * @param String body
-     * @param String bookId
+     * @param int bookId
      * @param String name
      * @param String attachments
      * @return Map<String, Object>
