@@ -72,7 +72,8 @@ public class Sendpulse implements SendpulseInterface{
          try {
         	 requestResult = this.sendRequest( "oauth/access_token", "POST", data, false );
 		 } catch (IOException e) {}
-         if( Integer.parseInt(requestResult.get("http_code").toString()) != 200 ) {
+         if(requestResult==null) return false;
+         if(Integer.parseInt(requestResult.get("http_code").toString()) != 200 ) {
              return false;
          }
          this.refreshToken = 0;
