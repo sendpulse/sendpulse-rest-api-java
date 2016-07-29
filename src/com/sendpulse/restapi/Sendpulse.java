@@ -201,6 +201,7 @@ public class Sendpulse implements SendpulseInterface{
          }
          return data;
      }
+     
      /**
       * Get list of address books
       *
@@ -417,7 +418,7 @@ public class Sendpulse implements SendpulseInterface{
      public Map<String, Object> createCampaign( String senderName, String senderEmail, String subject, String body, int bookId, String name, String attachments){
     	 if( senderName.length()==0 || senderEmail.length()==0 || subject.length()==0 || body.length()==0 || bookId<=0 )
 			  return this.handleError( "Not all data.");
-    	 String encodedBody = Base64.getEncoder().encodeToString(body.getBytes());
+     	 String encodedBody = Base64.getEncoder().encodeToString(body.getBytes());
 		 Map<String, Object> data = new HashMap<String, Object>();
 		 if(attachments.length()>0) data.put("attachments", attachments);
 		 data.put("sender_name", senderName);
@@ -631,7 +632,7 @@ public class Sendpulse implements SendpulseInterface{
     public Map<String, Object> smtpSendMail( Map<String, Object> emaildata ){
     	if(emaildata.size()==0) return this.handleError("Empty email data");
     	String html = emaildata.get("html").toString();
-    	html =  Base64.getEncoder().encodeToString(html.getBytes());
+    	html = Base64.getEncoder().encodeToString(html.getBytes());
     	emaildata.put("html", html);
     	Map<String, Object> data = new HashMap<String, Object>();
     	String serialized = Pherialize.serialize(emaildata);
@@ -643,7 +644,7 @@ public class Sendpulse implements SendpulseInterface{
         return this.handleResult(result);
     }
     /**
-     * Get list of emails that was sent by SMTP
+     * Get list of emails that was sent by SMTP 
      *
      * @param int limit
      * @param int offset
@@ -764,5 +765,156 @@ public class Sendpulse implements SendpulseInterface{
 			result = this.sendRequest( "smtp/domains/"+email, "GET", null,true );
 		} catch (IOException e) {}
         return this.handleResult(result);
+    }
+    
+    /**
+     * Get list of push campaigns
+     * @param limit
+     * @param offset
+     * @return
+     */
+    public Map<String, Object> pushListCampaigns(int limit, int offset){
+    	Map<String, Object> data = new HashMap<String, Object>();
+		if(limit>0) data.put("limit", limit);
+		if(offset>0) data.put("offset", offset);
+		Map<String, Object> result = null;
+		try {
+			result = this.sendRequest( "push/tasks", "GET", data,true );
+		} catch (IOException e) {}
+        return this.handleResult(result);
+    }
+    
+    /**
+     * Get amount of websites
+     * @return
+     */
+    public Map<String, Object> pushCountWebsites(){
+    	Map<String, Object> result = null;
+		try {
+			result = this.sendRequest( "push/websites/total", "GET", null,true );
+		} catch (IOException e) {}
+        return this.handleResult(result);
+    }
+    
+    /**
+     * Get list of websites
+     * @param limit
+     * @param offset
+     * @return
+     */
+    public Map<String, Object> pushListWebsites(int limit, int offset){
+    	Map<String, Object> data = new HashMap<String, Object>();
+		if(limit>0) data.put("limit", limit);
+		if(offset>0) data.put("offset", offset);
+		Map<String, Object> result = null;
+		try {
+			result = this.sendRequest( "push/websites", "GET", data,true );
+		} catch (IOException e) {}
+        return this.handleResult(result);
+    }
+    
+    /**
+     * Get list of all variables for website
+     * @param id
+     * @return
+     */
+    public Map<String, Object> pushListWebsiteVariables( int id){
+    	Map<String, Object> result = null;
+    	String url = "";
+    	if(id>0){
+    		url = "push/websites/"+id+"/variables";
+    		try {
+    			result = this.sendRequest( url, "GET", null,true );
+    		} catch (IOException e) {}
+    	}
+        return this.handleResult(result);
+    }
+    
+    /**
+     * Get list of subscriptions for the website
+     * @param id
+     * @param limit
+     * @param offset
+     * @return
+     */
+    public Map<String, Object> pushListWebsiteSubscriptions(int id,int limit, int offset){
+		Map<String, Object> result = null;
+		String url = "";
+		if(id>0){
+			Map<String, Object> data = new HashMap<String, Object>();
+			if(limit>0) data.put("limit", limit);
+			if(offset>0) data.put("offset", offset);
+    		url = "push/websites/"+id+"/subscriptions";
+			try {
+				result = this.sendRequest( url, "GET", data,true );
+			} catch (IOException e) {}
+			return this.handleResult(result);
+		}else{
+			return this.handleError("Empty ID");
+		}
+    }
+    
+    /**
+     * Get amount of subscriptions for the site
+     * @param id
+     * @return
+     */
+    public Map<String, Object> pushCountWebsiteSubscriptions( int id){
+    	Map<String, Object> result = null;
+    	String url = "";
+    	if(id>0){
+    		url = "push/websites/"+id+"/subscriptions/total";
+    		try {
+    			result = this.sendRequest( url, "GET", null,true );
+    		} catch (IOException e) {}
+    		return this.handleResult(result);
+    	}else{
+    		return this.handleError("Empty ID");
+    	}
+    }
+    
+    /**
+     * Set state for subscription
+     * @param id
+     * @param state
+     * @return
+     */
+    public Map<String, Object> pushSetSubscriptionState( int id, int state){
+    	if(id>0) {
+	    	Map<String, Object> data = new HashMap<String, Object>();
+	    	data.put("id", id);
+	    	data.put("state", state);
+	    	Map<String, Object> result = null;
+			try {
+				result = this.sendRequest( "push/subscriptions/state", "POST", data,true );
+			} catch (IOException e) {}
+			return this.handleResult(result);
+    	}else{
+    		return this.handleError("Empty ID");
+    	} 
+    }
+    
+    /**
+     * Create new push campaign
+     * @param Map<String, Object> taskinfo
+     * @param Map<String, Object> additionalParams
+     * @return
+     */
+    public Map<String, Object> createPushTask( Map<String, Object> taskinfo, Map<String, Object> additionalParams){
+    	Map<String, Object> data = taskinfo;
+    	Object ttl = data.get("ttl");
+    	if(ttl==null) data.put("ttl", 0);
+    	
+    	if(data.get("title")==null || data.get("website_id")==null || data.get("body")==null) {
+    		return this.handleError("Not all data");
+    	}
+    	if(additionalParams!=null && additionalParams.size()>0){
+    		data.putAll(additionalParams);
+    	}
+    	Map<String, Object> result = null;
+		try {
+			result = this.sendRequest( "/push/tasks", "POST", data,true );
+		} catch (IOException e) {}
+		return this.handleResult(result);
     }
 }

@@ -317,4 +317,65 @@ public interface SendpulseInterface {
      * @return Map<String, Object>
      */
     public Map<String, Object> smtpSendMail( Map<String, Object> emaildata );
+    
+    /**
+     * Get list of push campaigns
+     * @param limit
+     * @param offset
+     * @return
+     */
+    public Map<String, Object> pushListCampaigns(int limit, int offset);
+    
+    /**
+     * Get amount of websites
+     * @return
+     */
+    public Map<String, Object> pushCountWebsites();
+    
+    /**
+     * Get list of websites
+     * @param limit
+     * @param offset
+     * @return
+     */
+    public Map<String, Object> pushListWebsites(int limit, int offset);
+    
+    /**
+     * Get list of all variables for website
+     * @param id
+     * @return
+     */
+    public Map<String, Object> pushListWebsiteVariables( int id);
+    
+    /**
+     * Get list of subscriptions for the website
+     * @param id
+     * @param limit
+     * @param offset
+     * @return
+     */
+    public Map<String, Object> pushListWebsiteSubscriptions(int id,int limit, int offset);
+    
+    /**
+     * Get amount of subscriptions for the site
+     * @param id
+     * @return
+     */
+    public Map<String, Object> pushCountWebsiteSubscriptions( int id);
+    
+    /**
+     * Set state for subscription
+     * @param id
+     * @param state
+     * @return
+     */
+    public Map<String, Object> pushSetSubscriptionState( int id, int state);
+    
+    /**
+     * Create new push campaign
+     * @param Map<String, Object> taskinfo
+     * @param Map<String, Object> additionalParams
+     * @return
+     */
+    public Map<String, Object> createPushTask( Map<String, Object> taskinfo, Map<String, Object> additionalParams);
 }
