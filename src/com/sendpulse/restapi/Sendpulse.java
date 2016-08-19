@@ -783,7 +783,22 @@ public class Sendpulse implements SendpulseInterface{
 		} catch (IOException e) {}
         return this.handleResult(result);
     }
-    
+    /**
+     * Get push campaigns info
+     * @param id
+     * @return
+     */
+    public Map<String, Object> pushCampaignInfo( int id ){
+    	if(id>0){
+    		Map<String, Object> result = null;
+    		try {
+    			result = this.sendRequest( "push/tasks/"+id, "GET", null,true );
+    		} catch (IOException e) {}
+            return this.handleResult(result);
+    	}else{
+    		return this.handleError("No such push campaign");
+    	}
+    }
     /**
      * Get amount of websites
      * @return

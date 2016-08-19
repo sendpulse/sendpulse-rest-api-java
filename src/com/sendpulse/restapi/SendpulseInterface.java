@@ -327,6 +327,13 @@ public interface SendpulseInterface {
     public Map<String, Object> pushListCampaigns(int limit, int offset);
     
     /**
+     * Get push campaigns info
+     * @param id
+     * @return
+     */
+    public Map<String, Object> pushCampaignInfo( int id );
+    
+    /**
      * Get amount of websites
      * @return
      */
