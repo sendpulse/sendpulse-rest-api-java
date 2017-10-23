@@ -3,7 +3,7 @@ A simple SendPulse REST client library for Java.
 
 ## Usage
 
-```
+```java
 package com.sendpulse;
 import java.io.IOException;
 import java.nio.file.Files;
