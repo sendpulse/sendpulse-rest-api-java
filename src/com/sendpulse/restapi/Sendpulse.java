@@ -632,7 +632,9 @@ public class Sendpulse implements SendpulseInterface{
     public Map<String, Object> smtpSendMail( Map<String, Object> emaildata ){
     	if(emaildata.size()==0) return this.handleError("Empty email data");
     	String html = emaildata.get("html").toString();
-    	html = Base64.getEncoder().encodeToString(html.getBytes());
+        try {
+            html = Base64.getEncoder().encodeToString(html.getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException ignore) {}
     	emaildata.put("html", html);
     	Map<String, Object> data = new HashMap<String, Object>();
     	String serialized = Pherialize.serialize(emaildata);
