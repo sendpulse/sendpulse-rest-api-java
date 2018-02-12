@@ -127,7 +127,7 @@ public class Sendpulse implements SendpulseInterface{
 		 }
     	 con.setRequestMethod(method);
     	 if(!method.equals("GET")){
-		 	if(method.equals("PUT")) con.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
+		 	if(method.equals("PUT")) con.setRequestProperty("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 			con.setDoOutput(true);
 			con.setDoInput(true);
 			OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
@@ -629,10 +629,14 @@ public class Sendpulse implements SendpulseInterface{
      * @param String email
      * @return Map<String, Object>
      */
-    public Map<String, Object> smtpSendMail( Map<String, Object> emaildata ){
+    public Map<String, Object> smtpSendMail( Map<String, Object> emaildata){
     	if(emaildata.size()==0) return this.handleError("Empty email data");
     	String html = emaildata.get("html").toString();
-    	html = Base64.getEncoder().encodeToString(html.getBytes());
+    	try {
+			html = Base64.getEncoder().encodeToString(html.getBytes("UTF-8"));
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+		}
     	emaildata.put("html", html);
     	Map<String, Object> data = new HashMap<String, Object>();
     	String serialized = Pherialize.serialize(emaildata);
